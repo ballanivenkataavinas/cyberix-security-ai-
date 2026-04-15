@@ -1,7 +1,7 @@
 """
-AI Service - OpenAI/Groq Integration
+AI Service - Groq Integration
 """
-from openai import OpenAI
+from groq import Groq
 from typing import Tuple, Dict, List
 import uuid
 from app.core.config import settings
@@ -11,21 +11,13 @@ chat_sessions = {}
 
 class AIService:
     def __init__(self):
-        # Configure OpenAI client for Groq
-        api_key = settings.GROQ_API_KEY or settings.OPENAI_API_KEY
+        # Configure Groq client
+        api_key = settings.GROQ_API_KEY
         if not api_key:
-            raise ValueError("No API key configured. Set GROQ_API_KEY or OPENAI_API_KEY in .env")
+            raise ValueError("No API key configured. Set GROQ_API_KEY in .env")
         
-        # Use Groq if GROQ_API_KEY is set, otherwise use OpenAI
-        if settings.GROQ_API_KEY:
-            self.client = OpenAI(
-                api_key=api_key,
-                base_url="https://api.groq.com/openai/v1"
-            )
-            self.model = "llama-3.3-70b-versatile"  # Groq's fast model
-        else:
-            self.client = OpenAI(api_key=api_key)
-            self.model = "gpt-3.5-turbo"
+        self.client = Groq(api_key=api_key)
+        self.model = "llama-3.3-70b-versatile"  # Groq's fast model
     
     async def chat(self, message: str, session_id: str = None) -> Tuple[str, str]:
         """AI-powered cybersecurity chat assistant"""
