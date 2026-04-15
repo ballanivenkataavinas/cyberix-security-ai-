@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberix AI - From Detection to Defense</title>
+    <link rel="icon" type="image/png" href="assets/images/logo-icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Orbitron for tech/cyber style -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/cyber-animations.css">
+    <style>
+        /* Theme Variables */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-hover: #4f46e5;
+            --border-color: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-hover: #4f46e5;
+            --border-color: #cbd5e1;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --info: #2563eb;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+        }
+        
+        .cyber-border {
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .bg-primary { background-color: var(--bg-primary); }
+        .bg-secondary { background-color: var(--bg-secondary); }
+        .bg-tertiary { background-color: var(--bg-tertiary); }
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .text-muted { color: var(--text-muted); }
+        .border-custom { border-color: var(--border-color); }
+        
+        .severity-critical { color: var(--error); }
+        .severity-high { color: #f97316; }
+        .severity-medium { color: var(--warning); }
+        .severity-low { color: var(--info); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Input Focus States */
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-primary) !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Quick Access Buttons */
+        .quick-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .quick-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Login Page Specific */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            padding-bottom: 80px;
+        }
+
+        .login-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            text-align: center;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* SOC Dashboard - Always dark logs for visibility */
+        .log-item {
+            background: #334155 !important;
+            color: #f1f5f9 !important;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+        }
+
+        [data-theme="light"] .log-item {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+
+        .log-item .log-time {
+            color: #94a3b8 !important;
+        }
+
+        .log-item .log-user {
+            color: #cbd5e1 !important;
+        }
+    </style>
+</head>
+<body class="bg-primary text-primary">
+    <!-- Background Animation Canvases -->
+    <canvas id="matrixCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; opacity: 0.2;"></canvas>
+    <canvas id="particlesCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; opacity: 0.6;"></canvas>
+    
+    <!-- Disclaimer Modal -->
+    <div id="disclaimerModal" class="disclaimer-modal">
+        <div class="disclaimer-content" style="z-index: 200; position: relative;">
+            <div class="disclaimer-header">
+                <div class="shield-icon">🛡️</div>
+                <h2>⚠️ IMPORTANT DISCLAIMER ⚠️</h2>
+            </div>
+            
+            <div class="disclaimer-body">
+                <div class="warning-box">
+                    <h3>🎓 EDUCATIONAL PURPOSE ONLY</h3>
+                    <p>Cyberix AI is designed exclusively for educational purposes, cybersecurity research, and authorized security testing. This tool must NOT be used for any illegal activities, unauthorized access, or malicious purposes.</p>
+                </div>
+                
+                <div class="terms-section">
+                    <h3>📋 Terms of Use</h3>
+                    <ul>
+                        <li>✓ You must have explicit authorization before testing any system</li>
+                        <li>✓ Use only on systems you own or have written permission to test</li>
+                        <li>✓ Comply with all applicable laws and regulations</li>
+                        <li>✓ Respect privacy and data protection laws</li>
+                        <li>✗ Do NOT use for unauthorized penetration testing</li>
+                        <li>✗ Do NOT use for malicious hacking or cyber attacks</li>
+                        <li>✗ Do NOT use to harm individuals or organizations</li>
+                    </ul>
+                </div>
+                
+                <div class="legal-section">
+                    <h3>⚖️ Legal Notice</h3>
+                    <p>By using Cyberix AI, you acknowledge that:</p>
+                    <ul>
+                        <li>• You are solely responsible for your actions</li>
+                        <li>• The creators are not liable for any misuse</li>
+                        <li>• Unauthorized access to computer systems is illegal</li>
+                        <li>• Violations may result in criminal prosecution</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="disclaimer-footer">
+                <button onclick="declineDisclaimer()" class="btn-decline">Decline</button>
+                <button onclick="acceptDisclaimer()" class="btn-accept">I Accept & Understand</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 flex items-center justify-center" style="z-index: 50;">
+        <!-- Theme Toggle for Login Page -->
+        <button onclick="toggleTheme()" class="fixed top-6 right-6 bg-secondary p-3 rounded-full border-2 border-custom hover:border-accent-primary transition z-50" title="Toggle Dark/Light Mode" style="background: var(--bg-secondary); border-color: var(--border-color);">
+            <svg id="sunIcon" class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <svg id="moonIcon" class="w-6 h-6 hidden" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+        
+        <div class="login-container w-full">
+            <div class="bg-secondary rounded-lg p-8 max-w-md w-full cyber-border fade-in">
+                <div class="flex justify-center mb-6">
+                    <img src="assets/images/logo-full.png" alt="Cyberix AI" class="h-48 w-auto">
+                </div>
+                <p class="text-center text-muted text-sm mb-6">From Detection to Defense - Powered by AI</p>
+                
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <h3 class="text-xl mb-4 text-primary font-semibold">Login</h3>
+                    <input type="email" id="loginEmail" placeholder="Email" class="w-full p-3 mb-3 bg-tertiary text-primary rounded border border-custom transition">
+                    <input type="password" id="loginPassword" placeholder="Password" class="w-full p-3 mb-4 bg-tertiary text-primary rounded border border-custom transition">
+                    <button onclick="login()" class="w-full btn-primary">Login</button>
+                    <p class="text-center mt-4 text-sm text-secondary">
+                        Don't have an account? 
+                        <button onclick="showRegister()" style="color: var(--accent-primary);" class="hover:opacity-80 font-semibold">Register</button>
+                    </p>
+                </div>
+                
+                <!-- Register Form -->
+                <div id="registerForm" class="hidden">
+                    <h3 class="text-xl mb-4 text-primary font-semibold">Register</h3>
+                    <div class="p-3 rounded mb-4 text-sm text-secondary" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--info);">
+                        <strong>📧 Email Requirement:</strong> Only @gmail.com addresses allowed for public registration
+                    </div>
+                    <input type="text" id="regName" placeholder="Full Name" class="w-full p-3 mb-3 bg-tertiary text-primary rounded border border-custom transition">
+                    <input type="email" id="regEmail" placeholder="Email (must be @gmail.com)" class="w-full p-3 mb-3 bg-tertiary text-primary rounded border border-custom transition">
+                    <input type="password" id="regPassword" placeholder="Password (min 8 chars)" class="w-full p-3 mb-4 bg-tertiary text-primary rounded border border-custom transition">
+                    <button onclick="register()" class="w-full btn-primary">Register</button>
+                    <p class="text-center mt-4 text-sm text-secondary">
+                        Already have an account? 
+                        <button onclick="showLogin()" style="color: var(--accent-primary);" class="hover:opacity-80 font-semibold">Login</button>
+                    </p>
+                </div>
+                
+                <div id="authError" class="mt-4 p-3 rounded text-sm hidden" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); color: var(--error);"></div>
+            </div>
+        </div>
+        
+        <!-- Login Page Footer -->
+        <div class="login-footer">
+            <p class="text-muted text-sm">
+                Made by <span style="color: var(--accent-primary);" class="font-semibold">BV Avinash</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <!-- Header -->
+        <header class="gradient-bg p-4 shadow-lg">
+            <div class="container mx-auto flex justify-between items-center">
+                <!-- Left: Logo without circle -->
+                <div class="flex items-center gap-3">
+                    <img src="assets/images/logo-icon.png" alt="Cyberix AI" class="h-12 w-12">
+                </div>
+                
+                <!-- Center: Branding Text -->
+                <div class="text-center">
+                    <h1 class="text-2xl font-black text-white" style="font-family: 'Orbitron', sans-serif; letter-spacing: 0.08em;">
+                        <span style="color: #00d4ff; text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);">CYBERIX</span> <span style="color: #ff0040; text-shadow: 0 0 10px rgba(255, 0, 64, 0.5);">AI</span>
+                    </h1>
+                    <p class="text-xs text-white opacity-90 mt-1" style="letter-spacing: 0.05em;">From Detection to Defense — Powered by AI</p>
+                </div>
+                
+                <!-- Right: User info and actions -->
+                <div class="flex items-center gap-4">
+                    <span id="userName" class="text-sm text-white"></span>
+                    <span id="userRole" class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded text-white"></span>
+                    <button onclick="logout()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded transition text-white">Logout</button>
+                    <!-- Theme Toggle in Header -->
+                    <button onclick="toggleTheme()" class="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition" title="Toggle Dark/Light Mode">
+                        <svg id="sunIconHeader" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <svg id="moonIconHeader" class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Access Buttons -->
+        <div class="container mx-auto mt-6 px-4">
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+                <!-- Row 1: Common Attacks & Vulnerabilities -->
+                <button onclick="quickSearch('SQL Injection')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; font-weight: 600;">SQL Injection</button>
+                <button onclick="quickSearch('XSS')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; font-weight: 600;">XSS</button>
+                <button onclick="quickSearch('OWASP Top 10')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; font-weight: 600;">OWASP Top 10</button>
+                <button onclick="quickSearch('CSRF Attacks')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-weight: 600;">CSRF Attacks</button>
+                <button onclick="quickSearch('RCE Exploits')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; font-weight: 600;">RCE Exploits</button>
+                <button onclick="quickSearch('API Security')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; font-weight: 600;">API Security</button>
+                
+                <!-- Row 2: Consolidated Security Tools Button -->
+                <button onclick="showSecurityTools()" class="quick-btn text-sm" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; font-weight: 600;">🛠️ Security Tools</button>
+                <button onclick="quickSearch('OSINT')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); color: white; font-weight: 600;">OSINT</button>
+                <button onclick="quickSearch('Malware Analysis')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; font-weight: 600;">Malware Analysis</button>
+                
+                <!-- Row 3: Emerging & Practical -->
+                <button onclick="quickSearch('AI/ML Security')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; font-weight: 600;">AI/ML Security</button>
+                <button onclick="quickSearch('Cloud Security')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; font-weight: 600;">Cloud Security</button>
+                <button onclick="quickSearch('Zero Trust')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; font-weight: 600;">Zero Trust</button>
+                <button onclick="quickSearch('DevSecOps')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; font-weight: 600;">DevSecOps</button>
+                <button onclick="quickSearch('JWT Security')" class="quick-btn text-sm" style="background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); color: white; font-weight: 600;">JWT Security</button>
+                <button onclick="showNewsSources()" class="quick-btn text-sm" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; font-weight: 600;">📰 News Sources</button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="container mx-auto mt-6 px-4">
+            <div class="flex gap-2" style="border-bottom: 1px solid var(--border-color);">
+                <button onclick="switchTab('chat')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="chat">AI Chat</button>
+                <button onclick="switchTab('scanner')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="scanner">Code Scanner</button>
+                <button onclick="switchTab('script')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="script">Script Generator</button>
+                <button id="dashboardTabBtn" onclick="switchTab('dashboard')" class="tab-btn px-6 py-3 font-semibold transition text-muted hidden" data-tab="dashboard">SOC Dashboard</button>
+                <button onclick="switchTab('knowledge')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="knowledge">Knowledge Base</button>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="container mx-auto mt-6 px-4 pb-8">
+            <!-- AI Chat Tab -->
+            <div id="chatTab" class="tab-content">
+                <div class="bg-secondary rounded-lg p-6 cyber-border">
+                    <div id="chatMessages" class="overflow-y-auto mb-4 space-y-3" style="min-height: 200px; max-height: 600px; height: auto;"></div>
+                    <div class="flex gap-2 items-end">
+                        <textarea id="chatInput" placeholder="Ask about threats, pentesting, SOC operations..." class="flex-1 p-3 bg-tertiary text-primary rounded border border-custom transition resize-none" rows="1" style="min-height: 48px; max-height: 200px; overflow-y: auto;" onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 200) + 'px';"></textarea>
+                        <button onclick="sendChat()" class="btn-primary self-end">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Scanner Tab -->
+            <div id="scannerTab" class="tab-content hidden">
+                <div class="bg-secondary rounded-lg p-6 cyber-border">
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <select id="scanLanguage" class="p-3 bg-tertiary text-primary rounded border border-custom transition">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="php">PHP</option>
+                            <option value="java">Java</option>
+                            <option value="sql">SQL</option>
+                        </select>
+                        <select id="scanMode" class="p-3 bg-tertiary text-primary rounded border border-custom transition">
+                            <option value="vulnerability">Vulnerability Scan</option>
+                            <option value="explain">Explain Code</option>
+                            <option value="rewrite">Secure Rewrite</option>
+                        </select>
+                    </div>
+                    <textarea id="codeInput" placeholder="Paste your code here..." class="w-full h-64 p-4 bg-tertiary text-primary rounded border border-custom transition font-mono text-sm mb-4"></textarea>
+                    <button onclick="scanCode()" class="btn-primary">Analyze Code</button>
+                    <div id="scanResults" class="mt-6"></div>
+                </div>
+            </div>
+
+            <!-- Script Generator Tab -->
+            <div id="scriptTab" class="tab-content hidden">
+                <div class="bg-secondary rounded-lg p-6 cyber-border">
+                    <select id="scriptLanguage" class="w-full p-3 mb-4 bg-tertiary text-primary rounded border border-custom transition">
+                        <option value="python">Python</option>
+                        <option value="bash">Bash</option>
+                        <option value="powershell">PowerShell</option>
+                    </select>
+                    <textarea id="scriptTask" placeholder="Describe the script you need (e.g., 'Port scanner for common ports', 'Log file analyzer for failed SSH attempts')" class="w-full h-32 p-4 bg-tertiary text-primary rounded border border-custom transition mb-4"></textarea>
+                    <button onclick="generateScript()" class="btn-primary">Generate Script</button>
+                    <div id="scriptResults" class="mt-6"></div>
+                </div>
+            </div>
+
+            <!-- SOC Dashboard Tab -->
+            <div id="dashboardTab" class="tab-content hidden">
+                <div class="bg-secondary rounded-lg p-6 cyber-border">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold">Security Event Logs</h3>
+                        <button onclick="loadLogs()" class="btn-primary">Refresh</button>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-tertiary p-4 rounded">
+                            <div class="text-2xl font-bold severity-critical" id="criticalCount">0</div>
+                            <div class="text-sm text-muted">Critical Events</div>
+                        </div>
+                        <div class="bg-tertiary p-4 rounded">
+                            <div class="text-2xl font-bold severity-medium" id="warningCount">0</div>
+                            <div class="text-sm text-muted">Warnings</div>
+                        </div>
+                        <div class="bg-tertiary p-4 rounded">
+                            <div class="text-2xl font-bold severity-low" id="infoCount">0</div>
+                            <div class="text-sm text-muted">Info Events</div>
+                        </div>
+                    </div>
+                    <div id="logsList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <!-- Knowledge Base Tab -->
+            <div id="knowledgeTab" class="tab-content hidden">
+                <div class="max-h-[600px] overflow-y-auto pr-2">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Box 1: OWASP Top 10 (Keep as is) -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">OWASP Top 10</h3>
+                            <ul class="space-y-2 text-sm text-secondary">
+                                <li>• Broken Access Control</li>
+                                <li>• Cryptographic Failures</li>
+                                <li>• Injection</li>
+                                <li>• Insecure Design</li>
+                                <li>• Security Misconfiguration</li>
+                                <li>• Vulnerable Components</li>
+                                <li>• Authentication Failures</li>
+                                <li>• Data Integrity Failures</li>
+                                <li>• Logging Failures</li>
+                                <li>• SSRF</li>
+                            </ul>
+                        </div>
+
+                        <!-- Box 2: Common Vulnerabilities (Keep as is) -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Common Vulnerabilities</h3>
+                            <div class="space-y-3 text-sm">
+                                <div>
+                                    <strong class="severity-critical">SQL Injection:</strong> <span class="text-secondary">Malicious SQL code injection into queries</span>
+                                </div>
+                                <div>
+                                    <strong class="severity-critical">XSS:</strong> <span class="text-secondary">Cross-Site Scripting attacks via untrusted data</span>
+                                </div>
+                                <div>
+                                    <strong class="severity-high">CSRF:</strong> <span class="text-secondary">Cross-Site Request Forgery attacks</span>
+                                </div>
+                                <div>
+                                    <strong class="severity-medium">Weak Authentication:</strong> <span class="text-secondary">Poor password policies, no MFA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Box 3: Pentesting Lifecycle (Keep as is) -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Pentesting Lifecycle</h3>
+                            <ol class="space-y-2 text-sm list-decimal list-inside text-secondary">
+                                <li>Reconnaissance</li>
+                                <li>Scanning & Enumeration</li>
+                                <li>Gaining Access</li>
+                                <li>Maintaining Access</li>
+                                <li>Covering Tracks</li>
+                                <li>Reporting</li>
+                            </ol>
+                        </div>
+
+                        <!-- Box 4: SOC Operations (Keep as is) -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">SOC Operations</h3>
+                            <ul class="space-y-2 text-sm text-secondary">
+                                <li>• Continuous monitoring</li>
+                                <li>• Threat detection & analysis</li>
+                                <li>• Incident response</li>
+                                <li>• Log management</li>
+                                <li>• Vulnerability management</li>
+                                <li>• Security awareness</li>
+                            </ul>
+                        </div>
+
+                        <!-- Box 5: Cyber Security Essentials -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Cyber Security Essentials</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">CIA Triad:</strong> Confidentiality, Integrity, Availability</div>
+                                <div><strong style="color: var(--accent-secondary);">Defense in Depth:</strong> Multiple layers of security controls</div>
+                                <div><strong style="color: var(--accent-secondary);">Zero Trust:</strong> Never trust, always verify approach</div>
+                                <div><strong style="color: var(--accent-secondary);">Encryption:</strong> AES, RSA, TLS/SSL protocols</div>
+                                <div><strong style="color: var(--accent-secondary);">Access Control:</strong> RBAC, MAC, DAC models</div>
+                                <div><strong style="color: var(--accent-secondary);">Network Security:</strong> Firewalls, IDS/IPS, VPN</div>
+                                <div><strong style="color: var(--accent-secondary);">Security Policies:</strong> Standards, procedures, guidelines</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 6: System Administration -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">System Administration</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">Linux Hardening:</strong> SELinux, AppArmor, kernel tuning</div>
+                                <div><strong style="color: var(--accent-secondary);">Windows Security:</strong> Group Policy, BitLocker, WSUS</div>
+                                <div><strong style="color: var(--accent-secondary);">User Management:</strong> Least privilege, password policies</div>
+                                <div><strong style="color: var(--accent-secondary);">Patch Management:</strong> Regular updates, vulnerability scanning</div>
+                                <div><strong style="color: var(--accent-secondary);">Backup & Recovery:</strong> 3-2-1 rule, disaster recovery plans</div>
+                                <div><strong style="color: var(--accent-secondary);">Log Analysis:</strong> Syslog, Event Viewer, SIEM integration</div>
+                                <div><strong style="color: var(--accent-secondary);">Automation:</strong> Bash, PowerShell, Ansible, Puppet</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 7: Digital Evidence Analysis -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Digital Evidence Analysis</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">Forensic Process:</strong> Identification, preservation, analysis, reporting</div>
+                                <div><strong style="color: var(--accent-secondary);">Disk Forensics:</strong> File carving, deleted file recovery, timeline analysis</div>
+                                <div><strong style="color: var(--accent-secondary);">Memory Forensics:</strong> RAM analysis, process inspection, Volatility</div>
+                                <div><strong style="color: var(--accent-secondary);">Network Forensics:</strong> Packet capture, Wireshark, NetFlow analysis</div>
+                                <div><strong style="color: var(--accent-secondary);">Mobile Forensics:</strong> iOS/Android data extraction, app analysis</div>
+                                <div><strong style="color: var(--accent-secondary);">Tools:</strong> Autopsy, FTK, EnCase, Sleuth Kit</div>
+                                <div><strong style="color: var(--accent-secondary);">Chain of Custody:</strong> Evidence handling, documentation</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 8: Securing Computing Systems -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Securing Computing Systems</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">Endpoint Security:</strong> Antivirus, EDR, application whitelisting</div>
+                                <div><strong style="color: var(--accent-secondary);">Network Segmentation:</strong> VLANs, DMZ, micro-segmentation</div>
+                                <div><strong style="color: var(--accent-secondary);">Secure Configuration:</strong> CIS benchmarks, hardening guides</div>
+                                <div><strong style="color: var(--accent-secondary);">Cloud Security:</strong> AWS/Azure security, IAM, encryption</div>
+                                <div><strong style="color: var(--accent-secondary);">Container Security:</strong> Docker, Kubernetes security best practices</div>
+                                <div><strong style="color: var(--accent-secondary);">Web Application Security:</strong> WAF, secure coding, HTTPS</div>
+                                <div><strong style="color: var(--accent-secondary);">Database Security:</strong> Encryption at rest, access controls</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 9: Penetration Testing -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Penetration Testing</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">Methodology:</strong> PTES, OWASP, OSSTMM frameworks</div>
+                                <div><strong style="color: var(--accent-secondary);">Reconnaissance:</strong> OSINT, DNS enumeration, subdomain discovery</div>
+                                <div><strong style="color: var(--accent-secondary);">Scanning:</strong> Nmap, Nessus, OpenVAS, port scanning</div>
+                                <div><strong style="color: var(--accent-secondary);">Exploitation:</strong> Metasploit, exploit-db, custom exploits</div>
+                                <div><strong style="color: var(--accent-secondary);">Post-Exploitation:</strong> Privilege escalation, lateral movement</div>
+                                <div><strong style="color: var(--accent-secondary);">Web Testing:</strong> Burp Suite, OWASP ZAP, SQLMap</div>
+                                <div><strong style="color: var(--accent-secondary);">Reporting:</strong> Executive summary, technical findings, remediation</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 10: Malware Analysis & Cyber Defence -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Malware Analysis & Cyber Defence</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">Static Analysis:</strong> File signatures, strings, PE headers, disassembly</div>
+                                <div><strong style="color: var(--accent-secondary);">Dynamic Analysis:</strong> Sandbox execution, behavior monitoring</div>
+                                <div><strong style="color: var(--accent-secondary);">Reverse Engineering:</strong> IDA Pro, Ghidra, x64dbg, OllyDbg</div>
+                                <div><strong style="color: var(--accent-secondary);">Malware Types:</strong> Ransomware, trojans, rootkits, worms</div>
+                                <div><strong style="color: var(--accent-secondary);">Threat Intelligence:</strong> IOCs, MITRE ATT&CK, threat feeds</div>
+                                <div><strong style="color: var(--accent-secondary);">Incident Response:</strong> Detection, containment, eradication, recovery</div>
+                                <div><strong style="color: var(--accent-secondary);">Tools:</strong> Cuckoo, ANY.RUN, VirusTotal, YARA rules</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 11: Offensive Security Careers -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border" style="border: 2px solid #ef4444;">
+                            <h3 class="text-xl font-bold mb-4" style="color: #ef4444;">Offensive Security Careers</h3>
+                            <div class="space-y-3 text-sm text-secondary">
+                                <div>
+                                    <strong style="color: #ef4444;">Penetration Tester:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> Network/web exploitation, scripting, social engineering</div>
+                                        <div><strong>Certs:</strong> OSCP, CEH, GPEN, eWPT</div>
+                                        <div><strong>Tools:</strong> Metasploit, Burp Suite, Nmap, Cobalt Strike</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="color: #ef4444;">Red Team Operator:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> Advanced exploitation, C2 frameworks, evasion techniques</div>
+                                        <div><strong>Certs:</strong> OSEP, CRTO, GXPN, OSCE3</div>
+                                        <div><strong>Tools:</strong> Cobalt Strike, Empire, Covenant, custom tools</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="color: #ef4444;">Bug Bounty Hunter:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> Web vulnerabilities, API testing, mobile app security</div>
+                                        <div><strong>Certs:</strong> OSWE, BSCP, eWPTX</div>
+                                        <div><strong>Platforms:</strong> HackerOne, Bugcrowd, Synack, Intigriti</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="color: #ef4444;">Exploit Developer:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> Assembly, reverse engineering, exploit writing</div>
+                                        <div><strong>Certs:</strong> OSCE, OSEE, GXPN</div>
+                                        <div><strong>Tools:</strong> IDA Pro, Ghidra, GDB, WinDbg</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Box 12: Defensive Security Careers -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border" style="border: 2px solid #10b981;">
+                            <h3 class="text-xl font-bold mb-4" style="color: #10b981;">Defensive Security Careers</h3>
+                            <div class="space-y-3 text-sm text-secondary">
+                                <div>
+                                    <strong style="color: #10b981;">SOC Analyst (L1/L2/L3):</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> SIEM, log analysis, incident triage, threat hunting</div>
+                                        <div><strong>Certs:</strong> Security+, CySA+, GCIH, GCIA</div>
+                                        <div><strong>Tools:</strong> Splunk, QRadar, ELK Stack, CrowdStrike</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="color: #10b981;">Incident Responder:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> Forensics, malware analysis, containment strategies</div>
+                                        <div><strong>Certs:</strong> GCFA, GCFE, CHFI, ECIH</div>
+                                        <div><strong>Tools:</strong> Volatility, Autopsy, FTK, Wireshark</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="color: #10b981;">Threat Intelligence Analyst:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> OSINT, threat modeling, IOC analysis, reporting</div>
+                                        <div><strong>Certs:</strong> GCTI, CTIA, GIAC GOSI</div>
+                                        <div><strong>Tools:</strong> MISP, ThreatConnect, Maltego, Shodan</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="color: #10b981;">Security Engineer:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> Security architecture, firewall/IDS config, automation</div>
+                                        <div><strong>Certs:</strong> CISSP, CCSP, GIAC GCED</div>
+                                        <div><strong>Tools:</strong> Palo Alto, Fortinet, Cisco ASA, Python</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong style="color: #10b981;">Blue Team Lead:</strong>
+                                    <div class="ml-4 mt-1">
+                                        <div><strong>Skills:</strong> Team management, strategy, purple teaming</div>
+                                        <div><strong>Certs:</strong> CISSP, CISM, GSLC</div>
+                                        <div><strong>Focus:</strong> Defense strategy, metrics, continuous improvement</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Box 13: Compliance & Regulations -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Compliance & Regulations</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">GDPR:</strong> EU data protection, privacy rights, consent requirements</div>
+                                <div><strong style="color: var(--accent-secondary);">HIPAA:</strong> Healthcare data security, PHI protection, breach notification</div>
+                                <div><strong style="color: var(--accent-secondary);">PCI-DSS:</strong> Payment card security, 12 requirements, cardholder data</div>
+                                <div><strong style="color: var(--accent-secondary);">ISO 27001:</strong> Information security management system (ISMS)</div>
+                                <div><strong style="color: var(--accent-secondary);">NIST Framework:</strong> Identify, Protect, Detect, Respond, Recover</div>
+                                <div><strong style="color: var(--accent-secondary);">SOC 2:</strong> Trust service criteria, Type I/II audits</div>
+                                <div><strong style="color: var(--accent-secondary);">CCPA:</strong> California privacy law, consumer data rights</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 14: Emerging Technologies Security -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Emerging Technologies Security</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">AI/ML Security:</strong> Model poisoning, adversarial attacks, data privacy</div>
+                                <div><strong style="color: var(--accent-secondary);">IoT Security:</strong> Device authentication, firmware security, network segmentation</div>
+                                <div><strong style="color: var(--accent-secondary);">Blockchain Security:</strong> Smart contract audits, wallet security, 51% attacks</div>
+                                <div><strong style="color: var(--accent-secondary);">5G Security:</strong> Network slicing, edge computing, authentication</div>
+                                <div><strong style="color: var(--accent-secondary);">Quantum Computing:</strong> Post-quantum cryptography, quantum-resistant algorithms</div>
+                                <div><strong style="color: var(--accent-secondary);">DevSecOps:</strong> CI/CD security, shift-left approach, automated testing</div>
+                                <div><strong style="color: var(--accent-secondary);">Zero Trust Architecture:</strong> Micro-segmentation, continuous verification</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 15: Practice Platforms & CTFs -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Practice Platforms & CTFs</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">HackTheBox:</strong> Realistic machines, challenges, Pro Labs, CPTS certification</div>
+                                <div><strong style="color: var(--accent-secondary);">TryHackMe:</strong> Guided learning paths, rooms, King of the Hill</div>
+                                <div><strong style="color: var(--accent-secondary);">PentesterLab:</strong> Web application security, badges, exercises</div>
+                                <div><strong style="color: var(--accent-secondary);">PortSwigger Academy:</strong> Free web security training, Burp Suite labs</div>
+                                <div><strong style="color: var(--accent-secondary);">VulnHub:</strong> Downloadable vulnerable VMs, boot2root challenges</div>
+                                <div><strong style="color: var(--accent-secondary);">CTFtime:</strong> CTF competition calendar, team rankings, writeups</div>
+                                <div><strong style="color: var(--accent-secondary);">OverTheWire:</strong> Wargames, command line challenges, SSH access</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 16: Industry Trends & Salaries -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Industry Trends & Salaries</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">Entry Level (0-2 years):</strong> $60K-$90K - SOC Analyst, Junior Pentester</div>
+                                <div><strong style="color: var(--accent-secondary);">Mid Level (3-5 years):</strong> $90K-$130K - Security Engineer, Pentester</div>
+                                <div><strong style="color: var(--accent-secondary);">Senior Level (6-10 years):</strong> $130K-$180K - Senior Engineer, Red Team Lead</div>
+                                <div><strong style="color: var(--accent-secondary);">Expert Level (10+ years):</strong> $180K-$250K+ - Architect, CISO, Principal</div>
+                                <div><strong style="color: var(--accent-secondary);">Hot Skills 2026:</strong> Cloud security, AI/ML security, DevSecOps, Zero Trust</div>
+                                <div><strong style="color: var(--accent-secondary);">Remote Work:</strong> 70% of cybersecurity jobs offer remote/hybrid options</div>
+                                <div><strong style="color: var(--accent-secondary);">Job Growth:</strong> 35% projected growth through 2031, high demand</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 17: Social Engineering & Physical Security -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Social Engineering & Physical Security</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">Phishing:</strong> Email spoofing, credential harvesting, spear phishing</div>
+                                <div><strong style="color: var(--accent-secondary);">Vishing:</strong> Voice phishing, caller ID spoofing, pretexting</div>
+                                <div><strong style="color: var(--accent-secondary);">Smishing:</strong> SMS phishing, malicious links, fake alerts</div>
+                                <div><strong style="color: var(--accent-secondary);">Pretexting:</strong> Creating false scenarios, impersonation, trust exploitation</div>
+                                <div><strong style="color: var(--accent-secondary);">Baiting:</strong> USB drops, infected media, free offers</div>
+                                <div><strong style="color: var(--accent-secondary);">Physical Access:</strong> Tailgating, badge cloning, lock picking</div>
+                                <div><strong style="color: var(--accent-secondary);">Defense:</strong> Security awareness training, MFA, verification procedures</div>
+                            </div>
+                        </div>
+
+                        <!-- Box 18: Cloud Security Deep Dive -->
+                        <div class="bg-secondary rounded-lg p-6 cyber-border">
+                            <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Cloud Security Deep Dive</h3>
+                            <div class="space-y-2 text-sm text-secondary">
+                                <div><strong style="color: var(--accent-secondary);">AWS Security:</strong> IAM policies, S3 bucket security, VPC, CloudTrail, GuardDuty</div>
+                                <div><strong style="color: var(--accent-secondary);">Azure Security:</strong> Azure AD, Key Vault, Security Center, Sentinel</div>
+                                <div><strong style="color: var(--accent-secondary);">GCP Security:</strong> Cloud IAM, Security Command Center, VPC Service Controls</div>
+                                <div><strong style="color: var(--accent-secondary);">Container Security:</strong> Image scanning, runtime protection, Kubernetes RBAC</div>
+                                <div><strong style="color: var(--accent-secondary);">Serverless Security:</strong> Function permissions, API Gateway, secrets management</div>
+                                <div><strong style="color: var(--accent-secondary);">Cloud Compliance:</strong> Shared responsibility model, data residency, encryption</div>
+                                <div><strong style="color: var(--accent-secondary);">CSPM Tools:</strong> Prisma Cloud, Wiz, Orca Security, cloud-native security</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="bg-secondary py-6 mt-8" style="border-top: 1px solid var(--border-color);">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-muted text-sm">
+                    Made by <span style="color: var(--accent-primary);" class="font-semibold">BV Avinash</span>
+                </p>
+                <p class="text-muted text-xs mt-2">
+                    Copyright © 2026 Cyberix AI. All rights reserved.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/app.js"></script>
+    <script src="assets/cyber-animations.js"></script>
+    <script>
+        // Theme Toggle Function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Toggle icons in login page
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            if (sunIcon && moonIcon) {
+                sunIcon.classList.toggle('hidden');
+                moonIcon.classList.toggle('hidden');
+            }
+            
+            // Toggle icons in header
+            const sunIconHeader = document.getElementById('sunIconHeader');
+            const moonIconHeader = document.getElementById('moonIconHeader');
+            if (sunIconHeader && moonIconHeader) {
+                sunIconHeader.classList.toggle('hidden');
+                moonIconHeader.classList.toggle('hidden');
+            }
+        }
+
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'light') {
+                const sunIcon = document.getElementById('sunIcon');
+                const moonIcon = document.getElementById('moonIcon');
+                const sunIconHeader = document.getElementById('sunIconHeader');
+                const moonIconHeader = document.getElementById('moonIconHeader');
+                
+                if (sunIcon && moonIcon) {
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+                if (sunIconHeader && moonIconHeader) {
+                    sunIconHeader.classList.add('hidden');
+                    moonIconHeader.classList.remove('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

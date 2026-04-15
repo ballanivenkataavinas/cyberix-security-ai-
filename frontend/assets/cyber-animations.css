@@ -1,0 +1,235 @@
+/* Cybersecurity Animated Background Styles */
+
+/* Disclaimer Modal */
+.disclaimer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.disclaimer-modal.hidden {
+    display: none;
+}
+
+.disclaimer-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 3px solid #ff0040;
+    border-radius: 1rem;
+    padding: 2.5rem;
+    max-width: 700px;
+    max-height: 85vh;
+    width: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 0 50px rgba(255, 0, 64, 0.5), 0 0 100px rgba(0, 212, 255, 0.3);
+    position: relative;
+    animation: modalFadeIn 0.5s ease-out;
+    margin: 0 auto;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.disclaimer-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 0, 64, 0.1) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.disclaimer-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.shield-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% { 
+        filter: drop-shadow(0 0 20px #ff0040);
+        transform: scale(1);
+    }
+    50% { 
+        filter: drop-shadow(0 0 40px #ff0040) drop-shadow(0 0 60px #ff0040);
+        transform: scale(1.05);
+    }
+}
+
+.disclaimer-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 0, 64, 0.8);
+    margin: 0;
+}
+
+.disclaimer-body {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.warning-box {
+    background: rgba(255, 165, 0, 0.15);
+    border: 2px solid #ffa500;
+    border-left: 4px solid #ffa500;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.warning-box h3 {
+    color: #ffa500;
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+}
+
+.warning-box p {
+    margin: 0;
+    color: #e2e8f0;
+}
+
+.terms-section,
+.legal-section,
+.ethics-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 212, 255, 0.05);
+    border-radius: 0.5rem;
+    border-left: 3px solid #00d4ff;
+}
+
+.terms-section h3,
+.legal-section h3,
+.ethics-section h3 {
+    color: #00d4ff;
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+}
+
+.terms-section ul,
+.legal-section ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+    list-style: none;
+}
+
+.terms-section li,
+.legal-section li {
+    margin-bottom: 0.5rem;
+    color: #cbd5e1;
+}
+
+.terms-section li::before {
+    content: '';
+    margin-right: 0.5rem;
+}
+
+.legal-section p {
+    margin: 0.5rem 0;
+    color: #e2e8f0;
+}
+
+.ethics-section p {
+    margin: 0;
+    color: #e2e8f0;
+    font-style: italic;
+}
+
+.disclaimer-footer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-decline {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: transparent;
+    border: 2px solid #ff0040;
+    color: #ff0040;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+}
+
+.btn-decline:hover {
+    background: #ff0040;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 0, 64, 0.6);
+    transform: translateY(-2px);
+}
+
+.btn-accept {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+}
+
+.btn-accept:hover {
+    background: linear-gradient(135deg, #00e5ff 0%, #00b8e6 100%);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Scrollbar for disclaimer modal */
+.disclaimer-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.disclaimer-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.disclaimer-content::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 4px;
+}
+
+.disclaimer-content::-webkit-scrollbar-thumb:hover {
+    background: #00e5ff;
+}
