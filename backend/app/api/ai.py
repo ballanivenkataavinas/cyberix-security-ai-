@@ -76,6 +76,9 @@ async def ai_chat(
             "session_id": session_id
         }
     except Exception as e:
+        print(f"AI Chat Error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/scan", response_model=ScanResponse)
