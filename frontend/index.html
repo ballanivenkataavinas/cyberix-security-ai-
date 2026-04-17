@@ -198,6 +198,138 @@
         .log-item .log-user {
             color: #cbd5e1 !important;
         }
+
+        /* Status Indicator */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        .status-online {
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .status-typing {
+            background: #f59e0b;
+            box-shadow: 0 0 10px #f59e0b;
+        }
+
+        .status-processing {
+            background: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        .status-indicator.online {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .status-indicator.online .status-text {
+            color: #10b981;
+        }
+
+        .status-indicator.typing {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+            animation: glow-border 1.5s ease-in-out infinite;
+        }
+
+        .status-indicator.typing .status-text {
+            color: #f59e0b;
+            animation: blink-text 1s ease-in-out infinite;
+        }
+
+        .status-indicator.processing {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+            animation: glow-border 1s ease-in-out infinite;
+        }
+
+        .status-indicator.processing .status-text {
+            color: #ef4444;
+            animation: blink-text 0.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes blink-text {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes glow-border {
+            0%, 100% {
+                box-shadow: 0 0 20px currentColor;
+            }
+            50% {
+                box-shadow: 0 0 30px currentColor, 0 0 40px currentColor;
+            }
+        }
+
+        /* Button Glow Effect */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
     </style>
 </head>
 <body class="bg-primary text-primary">
@@ -374,12 +506,20 @@
 
         <!-- Tabs -->
         <div class="container mx-auto mt-6 px-4">
-            <div class="flex gap-2" style="border-bottom: 1px solid var(--border-color);">
+            <div class="flex gap-2 items-center" style="border-bottom: 1px solid var(--border-color);">
                 <button onclick="switchTab('chat')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="chat">AI Chat</button>
                 <button onclick="switchTab('scanner')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="scanner">Code Scanner</button>
                 <button onclick="switchTab('script')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="script">Script Generator</button>
                 <button id="dashboardTabBtn" onclick="switchTab('dashboard')" class="tab-btn px-6 py-3 font-semibold transition text-muted hidden" data-tab="dashboard">SOC Dashboard</button>
                 <button onclick="switchTab('knowledge')" class="tab-btn px-6 py-3 font-semibold transition text-muted" data-tab="knowledge">Knowledge Base</button>
+                
+                <!-- Status Indicator -->
+                <div class="ml-auto flex items-center gap-3">
+                    <div id="statusIndicator" class="status-indicator">
+                        <div class="status-dot status-online"></div>
+                        <span class="status-text">Online</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -740,10 +880,10 @@
                         <div class="bg-secondary rounded-lg p-6 cyber-border">
                             <h3 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">Industry Trends & Salaries</h3>
                             <div class="space-y-2 text-sm text-secondary">
-                                <div><strong style="color: var(--accent-secondary);">Entry Level (0-2 years):</strong> $60K-$90K - SOC Analyst, Junior Pentester</div>
-                                <div><strong style="color: var(--accent-secondary);">Mid Level (3-5 years):</strong> $90K-$130K - Security Engineer, Pentester</div>
-                                <div><strong style="color: var(--accent-secondary);">Senior Level (6-10 years):</strong> $130K-$180K - Senior Engineer, Red Team Lead</div>
-                                <div><strong style="color: var(--accent-secondary);">Expert Level (10+ years):</strong> $180K-$250K+ - Architect, CISO, Principal</div>
+                                <div><strong style="color: var(--accent-secondary);">Entry Level (0-2 years):</strong> ₹5L-₹8L - SOC Analyst, Junior Pentester</div>
+                                <div><strong style="color: var(--accent-secondary);">Mid Level (3-5 years):</strong> ₹8L-₹15L - Security Engineer, Pentester</div>
+                                <div><strong style="color: var(--accent-secondary);">Senior Level (6-10 years):</strong> ₹15L-₹25L - Senior Engineer, Red Team Lead</div>
+                                <div><strong style="color: var(--accent-secondary);">Expert Level (10+ years):</strong> ₹25L-₹50L+ - Architect, CISO, Principal</div>
                                 <div><strong style="color: var(--accent-secondary);">Hot Skills 2026:</strong> Cloud security, AI/ML security, DevSecOps, Zero Trust</div>
                                 <div><strong style="color: var(--accent-secondary);">Remote Work:</strong> 70% of cybersecurity jobs offer remote/hybrid options</div>
                                 <div><strong style="color: var(--accent-secondary);">Job Growth:</strong> 35% projected growth through 2031, high demand</div>

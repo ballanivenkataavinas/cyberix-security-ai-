@@ -6,12 +6,108 @@ let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
 let chatSessionId = null;
 let currentAttachment = null;
 
+// Status Indicator Functions
+function updateStatus(status) {
+    const indicator = document.getElementById('statusIndicator');
+    const dot = indicator.querySelector('.status-dot');
+    const text = indicator.querySelector('.status-text');
+    
+    // Remove all status classes
+    indicator.classList.remove('online', 'typing', 'processing');
+    dot.classList.remove('status-online', 'status-typing', 'status-processing');
+    
+    // Add new status
+    switch(status) {
+        case 'online':
+            indicator.classList.add('online');
+            dot.classList.add('status-online');
+            text.textContent = 'Online';
+            break;
+        case 'typing':
+            indicator.classList.add('typing');
+            dot.classList.add('status-typing');
+            text.textContent = 'Typing...';
+            break;
+        case 'processing':
+            indicator.classList.add('processing');
+            dot.classList.add('status-processing');
+            text.textContent = 'Processing...';
+            break;
+    }
+}
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
     if (authToken) {
         showMainApp();
     } else {
         showAuthModal();
+    }
+    
+    // Set initial status
+    updateStatus('online');
+    
+    // Add typing detection for chat input
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        let typingTimeout;
+        chatInput.addEventListener('input', () => {
+            updateStatus('typing');
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                if (chatInput.value.trim() === '') {
+                    updateStatus('online');
+                }
+            }, 1000);
+        });
+        
+        chatInput.addEventListener('blur', () => {
+            if (chatInput.value.trim() === '') {
+                updateStatus('online');
+            }
+        });
+    }
+    
+    // Add typing detection for code scanner
+    const codeInput = document.getElementById('codeInput');
+    if (codeInput) {
+        let typingTimeout;
+        codeInput.addEventListener('input', () => {
+            updateStatus('typing');
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                if (codeInput.value.trim() === '') {
+                    updateStatus('online');
+                }
+            }, 1000);
+        });
+        
+        codeInput.addEventListener('blur', () => {
+            if (codeInput.value.trim() === '') {
+                updateStatus('online');
+            }
+        });
+    }
+    
+    // Add typing detection for script generator
+    const scriptTask = document.getElementById('scriptTask');
+    if (scriptTask) {
+        let typingTimeout;
+        scriptTask.addEventListener('input', () => {
+            updateStatus('typing');
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                if (scriptTask.value.trim() === '') {
+                    updateStatus('online');
+                }
+            }, 1000);
+        });
+        
+        scriptTask.addEventListener('blur', () => {
+            if (scriptTask.value.trim() === '') {
+                updateStatus('online');
+            }
+        });
     }
 });
 
@@ -253,6 +349,9 @@ async function sendChat() {
     
     if (!message) return;
     
+    // Update status to processing
+    updateStatus('processing');
+    
     // Add user message to chat
     addChatMessage('user', message);
     input.value = '';
@@ -281,6 +380,7 @@ async function sendChat() {
         if (response.status === 401) {
             document.getElementById(loadingId).remove();
             handleApiError(null, response);
+            updateStatus('online');
             return;
         }
         
@@ -292,11 +392,16 @@ async function sendChat() {
             document.getElementById(loadingId).remove();
             // Add AI response
             addChatMessage('assistant', data.response);
+            
+            // Update status back to online
+            updateStatus('online');
         } else {
             document.getElementById(loadingId).textContent = `Error: ${data.detail}`;
+            updateStatus('online');
         }
     } catch (error) {
         document.getElementById(loadingId).textContent = 'Connection error. Please try again.';
+        updateStatus('online');
     }
 }
 
@@ -349,6 +454,9 @@ async function scanCode() {
         return;
     }
     
+    // Update status to processing
+    updateStatus('processing');
+    
     const resultsDiv = document.getElementById('scanResults');
     resultsDiv.innerHTML = '<div class="text-center text-gray-400">Analyzing code...</div>';
     
@@ -365,6 +473,7 @@ async function scanCode() {
         // Check for authentication error
         if (response.status === 401) {
             handleApiError(null, response);
+            updateStatus('online');
             return;
         }
         
@@ -372,11 +481,14 @@ async function scanCode() {
         
         if (response.ok) {
             displayScanResults(data);
+            updateStatus('online');
         } else {
             resultsDiv.innerHTML = `<div class="text-red-400">Error: ${data.detail}</div>`;
+            updateStatus('online');
         }
     } catch (error) {
         resultsDiv.innerHTML = '<div class="text-red-400">Connection error. Please try again.</div>';
+        updateStatus('online');
     }
 }
 
@@ -425,6 +537,9 @@ async function generateScript() {
         return;
     }
     
+    // Update status to processing
+    updateStatus('processing');
+    
     const resultsDiv = document.getElementById('scriptResults');
     resultsDiv.innerHTML = '<div class="text-center text-gray-400">Generating script...</div>';
     
@@ -441,6 +556,7 @@ async function generateScript() {
         // Check for authentication error
         if (response.status === 401) {
             handleApiError(null, response);
+            updateStatus('online');
             return;
         }
         
@@ -448,11 +564,14 @@ async function generateScript() {
         
         if (response.ok) {
             displayScriptResults(data);
+            updateStatus('online');
         } else {
             resultsDiv.innerHTML = `<div class="text-red-400">Error: ${data.detail}</div>`;
+            updateStatus('online');
         }
     } catch (error) {
         resultsDiv.innerHTML = '<div class="text-red-400">Connection error. Please try again.</div>';
+        updateStatus('online');
     }
 }
 
