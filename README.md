@@ -4,13 +4,13 @@ A full-stack AI-powered cybersecurity platform for threat analysis, code scannin
 
 ## Features
 
-- 🤖 AI-Powered Security Chat Assistant
-- 🔍 Code Vulnerability Scanner
-- 📝 Security Script Generator
-- 📊 SOC Dashboard with Real-time Logging
-- 📚 Cybersecurity Knowledge Base
-- 🔐 JWT Authentication & RBAC
-- 🛡️ Rate Limiting & Security Headers
+-  AI-Powered Security Chat Assistant
+-  Code Vulnerability Scanner
+-  Security Script Generator
+-  SOC Dashboard with Real-time Logging
+-  Cybersecurity Knowledge Base
+-  JWT Authentication & RBAC
+-  Rate Limiting & Security Headers
 
 ## Tech Stack
 
@@ -54,10 +54,6 @@ cp .env.example .env
 python run.py
 ```
 
-6. Access the application:
-- Frontend: http://localhost:8000
-- API Docs: http://localhost:8000/docs
-
 ## Security Features
 
 - JWT-based authentication
@@ -69,15 +65,6 @@ python run.py
 - CORS protection
 - Security event logging
 - Secure headers
-
-## API Endpoints
-
-- `POST /auth/register` - User registration
-- `POST /auth/login` - User authentication
-- `POST /ai/chat` - AI security assistant
-- `POST /ai/scan` - Code vulnerability scanner
-- `POST /ai/script` - Security script generator
-- `GET /logs` - Security event logs (admin only)
 
 ## Project Structure
 
